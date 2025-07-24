@@ -15,9 +15,6 @@ LedController ledController(LED_PINS);
 Receiver receiver(CHANNEL_CONFIGS, CHANNEL_PINS);
 
 Meltylock meltylock(ACCEL_RADIUS, TRANSLATION_OFFSET);
-//IntervalTimer meltylockTimer; // Timer to ensure periodic running of essential processes
-
-float max_accel = 0;
 
 RobotState robotState;
 
@@ -34,9 +31,6 @@ void setup(){
 	attachInterrupt(CHANNEL_PINS[3], ISR_Channel_3, CHANGE);
 	attachInterrupt(CHANNEL_PINS[4], ISR_Channel_4, CHANGE);
 	attachInterrupt(CHANNEL_PINS[5], ISR_Channel_5, CHANGE);
-  
-  // Setup timer ISR for melty lock
-  //meltylockTimer.begin(ISR_Melty_Lock, MELTYLOCK_ISR_INTERVAL);
 
   Serial.begin(9600);
 }
@@ -113,9 +107,11 @@ void loop(){
   }
 
   meltylock.readAccelerometer();
+  meltylock.calculateAngularVelocity();
+  meltylock.update();
 
-  ISR_Melty_Lock();
-
+  ledController.updateLed(meltylock.getHeading());  // Update leds for current heading error
+  
   // Debug Messages
   if(DEBUG){
     //receiver.displayValues();
@@ -123,11 +119,7 @@ void loop(){
     //robotState.displayState();
     //meltylock.displayAcceleration();
     //meltylock.displayAngularVelocity();
-    meltylock.displayRadius();
-    if(meltylock.getAcceleration() > max_accel){
-      max_accel = meltylock.getAcceleration();
-    }
-    //Serial.println(max_accel);
+    //meltylock.displayRadius();
     //Serial.println(meltylock.getHeading());
   }
 }
@@ -140,10 +132,3 @@ void ISR_Channel_3(){ receiver.isr(3); }
 void ISR_Channel_4(){ receiver.isr(4); }
 void ISR_Channel_5(){ receiver.isr(5); }
 
-void ISR_Melty_Lock(){
-  meltylock.updateParameters();           // Radius and translation offset adjusted
-  meltylock.setAngularVelocity();         // Calculate most current angular velocity
-  meltylock.updateHeadingError();         // Apply angular velocity to heading error
-  ledController.updateLed(meltylock.getHeading());  // Update leds for current heading error
-  meltylock.setLastUpdateTime();
-}

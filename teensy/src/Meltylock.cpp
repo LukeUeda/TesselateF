@@ -17,6 +17,8 @@ Meltylock::Meltylock(float _radius, float _translation_offset){
 	steering = 0;
 	radius_adjust = 0;
 	translation_offset_adjust = 0;
+	
+	last_update_time = 0;
 
 	last_acceleration = {
 		.x = 0,
@@ -37,35 +39,18 @@ void Meltylock::readAccelerometer(){
 	}
 }
 
-void Meltylock::setAngularVelocity(){
+void Meltylock::calculateAngularVelocity(){
 	last_acceleration.m = sqrt(last_acceleration.x*last_acceleration.x + last_acceleration.y*last_acceleration.y);
 	ang_vel = sqrt(last_acceleration.m * 1000/abs(radius)) * RAD_TO_DEG;
 }
 
-void Meltylock::updateHeadingError(){
-	shiftHeading((ang_vel + steering * STEER_SPEED)* (micros() - last_update_time) / 1000000);
+void Meltylock::updateParameters(float d_radius, float d_translation_offset){
+	radius += d_radius;
+	translation_offset += d_translation_offset;
 }
 
-void Meltylock::updateParameters(){
-	radius += radius_adjust * RADIUS_ADJUST_SPEED * (micros() - last_update_time)/ 1000000;
-	translation_offset += translation_offset_adjust * TRANSLATION_OFFSET_ADJUST_SPEED * 
-		(micros() - last_update_time);
-}
-
-void Meltylock::setLastUpdateTime(){
-	last_update_time = micros();
-}
-
-float Meltylock::getHeading(){
-	return h_error;
-}
-
-HeadingState Meltylock::getHeadingState(){
-	return heading_state;
-}
-
-void Meltylock::shiftHeading(float angle){
-	h_error -= angle;
+void Meltylock::updateHeading(float d_angle){
+	h_error -= d_angle;
 	while(h_error > 180){
 		h_error -= 360;
 	} 
@@ -83,18 +68,46 @@ void Meltylock::shiftHeading(float angle){
 	}
 }
 
-void Meltylock::setSteering(float _steering){
-	steering = _steering;
+void Meltylock::update(){
+	float delta_t = (micros() - last_update_time) / 1000000;
+	
+	// Update heading
+	updateHeading((ang_vel + steering * STEER_SPEED) * delta_t);
+	
+	// Adjust meltylock parameters
+	updateParameters(radius_adjust * RADIUS_ADJUST_SPEED * delta_t, translation_offset_adjust * TRANSLATION_OFFSET_ADJUST_SPEED * delta_t);
+	
+	// Set last update time
+	last_update_time = micros();
 }
 
-void Meltylock::adjustRadius(float _radius_adjust){
-	radius_adjust = _radius_adjust;
+
+float Meltylock::getHeading(){
+	return h_error;
+}
+
+HeadingState Meltylock::getHeadingState(){
+	return heading_state;
+}
+
+float Meltylock::getAcceleration(){
+	return last_acceleration.m;
+}
+
+
+void Meltylock::setSteering(float _steering){
+	steering = _steering;
 }
 
 void Meltylock::displayRadius(){
 	Serial.print("Radius: ");
 	Serial.println(radius, 10);
 }
+
+void Meltylock::adjustRadius(float _radius_adjust){
+	radius_adjust = _radius_adjust;
+}
+
 
 void Meltylock::displayAcceleration(){
 	//Serial.print("Acceleration: "); 
@@ -109,6 +122,5 @@ void Meltylock::displayAngularVelocity(){
 	Serial.println(ang_vel);
 }
 
-float Meltylock::getAcceleration(){
-	return last_acceleration.m;
-}
+
+
