@@ -76,11 +76,11 @@ void loop(){
 
       // Spin and Translation
       if(meltylock.getHeadingState() == HEADING_LEFT){
-        leftMotor.setSetpoint(receiver.getValue(3) + TRANSLATE_DECEL_FACTOR * receiver.getValue(2));
-        rightMotor.setSetpoint(-receiver.getValue(3) + TRANSLATE_ACCEL_FACTOR * receiver.getValue(2));
+        leftMotor.setSetpoint(-receiver.getValue(3) + TRANSLATE_DECEL_FACTOR * receiver.getValue(2));
+        rightMotor.setSetpoint(receiver.getValue(3) + TRANSLATE_ACCEL_FACTOR * receiver.getValue(2));
       } else {
-        leftMotor.setSetpoint(receiver.getValue(3) - TRANSLATE_ACCEL_FACTOR * receiver.getValue(2));
-        rightMotor.setSetpoint(-receiver.getValue(3) - TRANSLATE_DECEL_FACTOR * receiver.getValue(2));
+        leftMotor.setSetpoint(-receiver.getValue(3) - TRANSLATE_ACCEL_FACTOR * receiver.getValue(2));
+        rightMotor.setSetpoint(receiver.getValue(3) - TRANSLATE_DECEL_FACTOR * receiver.getValue(2));
       }
 
       ledController.setPattern(SIMPLE_ARC);
@@ -96,8 +96,8 @@ void loop(){
       meltylock.adjustRadius(receiver.getValue(1));
 
       // Spin
-      leftMotor.setSetpoint(receiver.getValue(3));
-      rightMotor.setSetpoint(-receiver.getValue(3));
+      leftMotor.setSetpoint(-receiver.getValue(3));
+      rightMotor.setSetpoint(receiver.getValue(3));
 
       ledController.setPattern(SIMPLE_ARC);
       break;
@@ -106,10 +106,11 @@ void loop(){
       rightMotor.disable();
   }
 
+  // Update heading error and configuration paramters
   meltylock.readAccelerometer();
   meltylock.calculateAngularVelocity();
   meltylock.update();
-
+  
   ledController.updateLed(meltylock.getHeading());  // Update leds for current heading error
   
   // Debug Messages
@@ -120,7 +121,7 @@ void loop(){
     //meltylock.displayAcceleration();
     //meltylock.displayAngularVelocity();
     //meltylock.displayRadius();
-    //Serial.println(meltylock.getHeading());
+    Serial.println(meltylock.getHeading());
   }
 }
 

@@ -69,8 +69,8 @@ void Meltylock::updateHeading(float d_angle){
 }
 
 void Meltylock::update(){
-	float delta_t = (micros() - last_update_time) / 1000000;
-	
+	float delta_t = (float)(micros() - last_update_time) / 1000000.0f;
+
 	// Update heading
 	updateHeading((ang_vel + steering * STEER_SPEED) * delta_t);
 	

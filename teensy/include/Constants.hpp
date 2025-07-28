@@ -19,11 +19,11 @@
 // LED controller constants
 #define LED_COUNT 			5
 
-#define LED_PIN_0 			8
-#define LED_PIN_1 			9
-#define LED_PIN_2 			10
-#define LED_PIN_3 			11
-#define LED_PIN_4 			12
+#define LED_PIN_0 			5
+#define LED_PIN_1 			6
+#define LED_PIN_2 			7
+#define LED_PIN_3 			8
+#define LED_PIN_4 			9
 
 // LED pattern constants
 #define SIMPLE_ARC_ANGLE		60
@@ -31,12 +31,12 @@
 // Receiver constants
 #define CHANNEL_COUNT 			6
 
-#define CHANNEL_PIN_0 			16
-#define CHANNEL_PIN_1			23
-#define CHANNEL_PIN_2 			22
-#define CHANNEL_PIN_3 			17
-#define CHANNEL_PIN_4 			20
-#define CHANNEL_PIN_5 			21
+#define CHANNEL_PIN_0 			23
+#define CHANNEL_PIN_1			22
+#define CHANNEL_PIN_2 			21
+#define CHANNEL_PIN_3 			20
+#define CHANNEL_PIN_4 			17
+#define CHANNEL_PIN_5 			16
 
 #define CHANNEL_0_TYPE 			STICK
 #define CHANNEL_0_MIN_PULSE 		1000
