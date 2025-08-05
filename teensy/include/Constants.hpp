@@ -26,7 +26,7 @@
 #define LED_PIN_4 			9
 
 // LED pattern constants
-#define SIMPLE_ARC_ANGLE		60
+#define SIMPLE_ARC_ANGLE		50
 
 // Receiver constants
 #define CHANNEL_COUNT 			6
@@ -73,17 +73,19 @@
 #define FAILSAFE_THRESHOLD		1000
 
 // Meltylock constants
-#define ACCEL_RADIUS 			98.8490524292
-#define TRANSLATION_OFFSET		0
+#define ACCELEROMETER_TIMEOUT_US	3000
+
+#define ACCEL_RADIUS 			108.3943252563
+#define TRANSLATION_OFFSET		0.13
 
 #define SDA_PIN 			18
 #define SCL_PIN 			19
 
 // Control constants
-#define STEER_SPEED			360	
+#define STEER_SPEED			1080	
 #define TRANSLATE_DECEL_FACTOR		1
 #define TRANSLATE_ACCEL_FACTOR		1
 
 #define RADIUS_ADJUST_SPEED		5
-#define TRANSLATION_OFFSET_ADJUST_SPEED	180
+#define TRANSLATION_OFFSET_ADJUST_SPEED	0.1
 #endif

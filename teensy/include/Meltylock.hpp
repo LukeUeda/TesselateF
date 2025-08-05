@@ -32,14 +32,16 @@ class Meltylock{
 		volatile float h_error; // Heading error
 		volatile HeadingState heading_state; // Heading state: Left or Right of robot
 		volatile unsigned long last_update_time; // Time since last update
+		volatile unsigned long last_accel_time; // Time since accelerometer read last began
 	public:
 		Meltylock(float _radius, float _translation_offset);
 
 		void readAccelerometer();
-		void calculateAngularVelocity();
+		void calculateAngularVelocity(float translation);
 		
 		// Update methods
 		void updateHeading(float d_angle);
+		void updateHeadingState(float translation_angle);
 		void updateParameters(float d_radius, float d_translation);	
 		void update(); // Runs all update methods
 
@@ -50,9 +52,11 @@ class Meltylock{
 		// Setting control parameters
 		void setSteering(float _steering);
 		void adjustRadius(float _radius_adjust);
+		void adjustTranslationOffset(float _translation_offset_adjust);
 		
 		// Debug printing
 		void displayRadius();
+		void displayTranslationOffset();
 		void displayAcceleration();
 		void displayAngularVelocity();
 };
